@@ -1,0 +1,109 @@
+
+/** HEADER **/
+header
+   padding-top: 80px
+
+   &.container
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3)
+
+   h1
+      font-size: 2.5vh
+      text-transform: uppercase
+      color: white
+      font-weight: 400
+      color: #ffffffb6
+
+   p
+      padding-top: 20px
+      text-transform: uppercase
+      color: white
+      font-weight: 500
+      color: #ffffffb6
+      font-size: 1.8vh
+   .bg-image
+      max-height: 35%
+      width: 100%
+      overflow: hidden
+      position: absolute
+      top: 0
+      left: 0
+      background: #282828
+      z-index: -1
+
+      display: flex
+      justify-content: center
+      align-items: center
+
+   img
+      z-index: 1
+      opacity: 0.5
+      filter: blur(8px)
+      width: 100%
+      animation-duration: .5s
+   p
+      justify-content: center
+      align-items: center
+      .backbutton
+         margin-right: 10px
+      .category
+         font-weight: 700
+
+@keyframes oldBG
+   from
+      opacity: 0.5
+     
+
+   to
+      opacity: 0.01
+    
+
+@keyframes newBG
+   from
+      opacity: 0.01
+
+   to
+      opacity: 0.5
+
+/** END HEADER **/
+
+/** START RESPONSIVE BREAKPOINTS **/
+$breakpoint-sm: 600px
+$breakpoint-md: 768px
+$breakpoint-lg: 992px
+$breakpoint-xl: 1200px
+$breakpoint-xll: 2500px
+$breakpoint-xxl: 3840px
+
+@media (min-width: $breakpoint-xxl)
+   .container
+      min-width: 80%
+      svg
+         transform: scale(2.5)
+         margin-right: 30px
+   h1
+      font-size: 5rem
+
+@media (min-width: $breakpoint-xll + 1) and (max-width: $breakpoint-xxl)
+   .container
+      min-width: 80%
+      svg
+         transform: scale(2)
+         margin-right: 30px
+   h1
+      font-size: 5rem
+
+@media (max-width: $breakpoint-sm)
+   .row
+      margin-left: 7px
+   h1
+      font-size: 2rem
+   p
+      font-size: 1rem
+
+   header
+      .bg-image
+         min-height: 45%
+      img
+         height: 100% !important
+         width: auto !important
+         filter: blur(5px) !important

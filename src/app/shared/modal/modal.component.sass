@@ -1,0 +1,340 @@
+.blackdrop
+   position: fixed
+   top: 0
+   left: 0
+   z-index: 50
+   height: 100vh
+   width: 100vw
+   background-color: rgba(0,0,0, 0.75)
+
+@keyframes falldown
+   from
+      opacity: 0
+      top: -20%
+   to
+      top: 50%
+      opacity: 1 
+      
+
+
+
+.nopadding
+   padding: 0 !important
+.alert-box
+   // position: absolute
+   max-width: 95% !important
+   background: white
+   width: 50%
+   opacity: 1 
+   position: fixed
+   top: 50%
+   left: 50%
+   transform: translate(-50%, -50%)
+   z-index: 100
+   padding: 26px
+   animation-name: falldown
+   animation-duration: .5s
+   border-radius: 5px
+
+   .alert-box-button-close
+      position: absolute
+      top: -40px
+      right: 0
+      svg
+         margin-right: 5px
+         margin-bottom: 4px
+         transform: scale(.8)
+      .close-button
+         border: none
+         background-color: #0b000100
+         color: white
+         text-transform: uppercase
+         font-weight: 500
+         font-size: .9rem
+   /** START ADD CATEGORY CSS **/
+   #body
+      .error
+         color: #ff7961
+         font-size: 80%
+         display: block
+         padding: 2% 2% 0 2%
+         text-align: center
+      h3
+         font-size: 1.2rem
+         text-transform: uppercase
+         color: #555555
+         font-weight: 500
+      form
+         padding-top: 20px
+         padding-bottom: 5px
+         width: 100%
+         border-bottom: 1px solid #eeeeee
+         height: 70px
+
+         input[type=text]
+            width: 70%
+            float: left
+            padding: 10px 10px 10px 5px
+            text-transform: uppercase
+            border: none
+            font-size: .8rem
+
+            font-weight: 500
+            &:focus
+               outline: none
+            &::placeholder
+               color: #aaaaaa
+         button
+            width: 22%
+            float: right
+            padding: 10px
+            color: white
+            text-transform: uppercase
+            border-radius: 5px
+            background-color: #42c78d
+            border-color: #42c78d
+            font-size: .8rem
+            svg
+               margin-bottom: 3px
+               margin-right: 3px
+               transform: scale(0.8)
+            &:focus
+               outline: none
+               box-shadow: none
+
+      /** END ADD CATEGORY **/
+      /** ADD PHOTOS **/
+      .draganddrop
+         margin-top: 20px
+         min-height: 220px
+         width: 100%
+         border: 3px dashed #eeeeee
+         text-align: center
+         border-color
+         svg
+            margin: 40px auto 8px auto
+            display: block
+         .text
+            color: #aaaaaa
+            text-transform: uppercase
+            font-weight: 700
+            display: block
+         .text-outlined
+            display: block
+            color: #aaaaaa
+         .file
+            opacity: 0
+            width: 0.1px
+            height: 0.1px
+            position: absolute
+         .label-file
+
+            display: block
+            width: 220px
+            height: 45px
+            border-radius: 5px
+            background-color: white
+            border: 3px solid #aaaaaa
+            color: #aaaaaa
+            display: flex
+            align-items: center
+            justify-content: center
+            margin: 5px auto auto auto
+            text-transform: uppercase
+
+            cursor: pointer
+
+   /** END ADD PHOTOS  **/
+   /** START GALLERY  **/
+carousel
+   &::ng-deep .carousel-control-next
+      margin-right: -80px !important
+      .carousel-control-next-icon
+         background-image: url('data:image/svg+xml;utf8, <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16px" height="24px"><path fill-rule="evenodd"  fill="rgb(249, 249, 249)" d="M3.775,-0.000 L0.924,2.820 L10.182,12.000 L0.924,21.180 L3.775,24.000 L15.903,12.000 L3.775,-0.000 Z"/></svg>')
+         width: 16px
+         height: 24px
+   &::ng-deep .carousel-control-prev
+      margin-left: -80px !important
+      .carousel-control-prev-icon
+         background-image: url('data:image/svg+xml;utf8, <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15px" height="24px"><path fill-rule="evenodd"  opacity="0.502" fill="rgb(249, 249, 249)" d="M12.157,24.000 L15.013,21.180 L5.736,12.000 L15.013,2.820 L12.157,-0.000 L0.003,12.000 L12.157,24.000 Z"/></svg>')
+         width: 16px
+         height: 24px
+   /** END GALLERY GALLERY  **/
+
+$breakpoint-sm: 600px
+$breakpoint-md: 768px
+$breakpoint-lg: 992px
+$breakpoint-xl: 1200px
+$breakpoint-xll: 2500px
+$breakpoint-xxl: 3840px
+
+@media (min-width: $breakpoint-xxl)
+   .alert-box
+
+      font-size: 4rem
+      padding: 70px
+      border-radius: 10px !important
+      .alert-box-button-close
+         top: -130px !important
+         svg
+            transform: scale(3) !important
+            margin-right: 50px !important
+         .close-button
+            font-size: 3rem!important
+   #body
+
+      h3
+         font-size: 4rem !important
+      form
+         height: 210px !important
+         padding-top: 70px !important
+         border-bottom: 3px solid #eeeeee !important
+         input[type=text]
+            font-size: 2.5rem !important
+            padding: 40px 40px 30px 20px !important
+      button
+         padding: 25px !important
+         font-size: 2.9rem !important
+         border-radius: 10px !important
+         width: 15% !important
+         svg
+            transform: scale(2.8) !important
+            margin-right: 30px !important
+      .draganddrop
+         margin-top: 70px !important
+         height: auto
+         padding: 100px
+         border: 10px dashed #eeeeee !important
+         svg
+            transform: scale(3)
+         .text
+            margin-top: 50px
+         .label-file
+            width: 35% !important
+            height: 160px !important
+            border-radius: 15px !important
+            border: 10px solid #aaaaaa !important
+   carousel
+      &::ng-deep .carousel-control-next
+         margin-right: -12% !important
+         .carousel-control-next-icon
+            transform: scale(3.1) !important
+      &::ng-deep .carousel-control-prev
+         margin-left: -12% !important
+         .carousel-control-prev-icon
+            transform: scale(3.1) !important
+
+@media (min-width: $breakpoint-xll ) and (max-width: $breakpoint-xxl)
+   .alert-box
+      font-size: 3rem
+      padding: 50px
+      .alert-box-button-close
+         top: -100px !important
+         svg
+            transform: scale(1.6)!important
+            margin-right: 30px !important
+            margin-bottom: 10px !important
+         .close-button
+
+            font-size: 2rem!important
+   #body
+
+      h3
+         font-size: 3rem !important
+      form
+         height: 160px !important
+         padding-top: 40px !important
+         border-bottom: 2px solid #eeeeee !important
+         input[type=text]
+            font-size: 2rem !important
+            padding: 30px 30px 30px 20px !important
+      button
+         padding: 20px !important
+         font-size: 2rem !important
+         svg
+            transform: scale(2.2) !important
+            margin-right: 20px !important
+   .draganddrop
+      margin-top: 70px !important
+      height: auto
+      padding: 100px
+      border: 7px dashed #eeeeee !important
+      svg
+         transform: scale(2)
+      .text
+         margin-top: 50px
+      .label-file
+         width: 50% !important
+         height: 160px !important
+         border-radius: 15px !important
+         border: 10px solid #aaaaaa !important
+   carousel
+      &::ng-deep .carousel-control-next
+         margin-right: -12% !important
+         .carousel-control-next-icon
+            transform: scale(2.6) !important
+      &::ng-deep .carousel-control-prev
+         margin-left: -12% !important
+         .carousel-control-prev-icon
+            transform: scale(2.6) !important
+
+@media (min-width: $breakpoint-xl + 1) and (max-width: $breakpoint-xll - 1)
+   .alert-box
+      font-size: 1rem
+      width: 40%
+
+      .alert-box-button-close
+         top: -40px !important
+         svg
+            transform: scale(.8) !important
+            margin-right: 4px !important
+         .close-button
+            font-size: 1rem!important
+   carousel
+      &::ng-deep .carousel-control-next
+         margin-right: -12% !important
+         .carousel-control-next-icon
+            transform: scale(1) !important
+      &::ng-deep .carousel-control-prev
+         margin-left: -12% !important
+         .carousel-control-prev-icon
+            transform: scale(1) !important
+
+@media (min-width: $breakpoint-lg + 1) and (max-width: $breakpoint-xl)
+   .alert-box
+      width: 70%
+
+@media (min-width: $breakpoint-md + 1) and (max-width: $breakpoint-lg)
+   .alert-box
+      width: 70%
+
+@media (min-width: $breakpoint-sm + 1) and (max-width: $breakpoint-md)
+   .alert-box
+      width: 90%
+   carousel
+      &::ng-deep .carousel-control-next
+         margin-right: 0 !important
+      &::ng-deep .carousel-control-prev
+         margin-left: 0 !important
+
+@media (max-width: $breakpoint-sm)
+
+   .alert-box
+      width: 90%
+
+   #body
+      form
+
+         input[type=text]
+            width: 100% !important
+
+         button
+            margin-top: 30px
+            min-width: 30vw !important
+   carousel
+      &::ng-deep .carousel-control-next
+         margin-right: 0 !important
+      &::ng-deep .carousel-control-prev
+         margin-left: 0 !important
+   .error 
+      margin-top: 80px

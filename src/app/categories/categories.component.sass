@@ -1,0 +1,238 @@
+
+/** START SECTION **/
+#categories
+  padding-top: 4vh
+
+.main-card
+  .close_cross
+    position: absolute
+    right: -10px
+    top: -10px
+    font-size: .9rem
+    border-radius: 50%
+    background-color: #ef5350
+    height: 23px
+    width: 23px
+    color: white
+    text-align: center
+    opacity: 0
+    transition: .4s
+    cursor: pointer
+    transition-delay: 1s
+.card
+  padding: 0px
+  box-shadow: 0px 1px 6px -2px rgba(156,156,156,0.8)
+  border-radius: 5px
+
+  border: none
+  height: auto
+  transition: .2s
+  .card-header
+    overflow: hidden
+    padding: 0
+    height: 150px
+    overflow: hidden
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+
+  .card-title
+    padding-top: 10px
+    display: flex
+    justify-content: center
+    align-items: center
+    color: #555555be
+    height: 40px
+    font-weight: 500
+
+    flex-direction: column
+    .title
+      text-transform: uppercase
+      font-weight: 700
+      padding-top: 25px
+      transition: .4s
+    .photos
+      color: #aaaaaa
+      opacity: 0
+      transition: .4s
+
+  &:hover
+    box-shadow: 0px 2px 7px 0px rgba(156,156,156,1)
+    transform: translateY(-10px)
+    .card-title
+      height: 60px
+      .title
+        padding-top: 0px
+      .photos
+        opacity: 1
+
+    .card-header
+      height: 130px
+    .close_cross
+      opacity: .9
+
+.new-category
+  background-color: white
+  display: flex
+  justify-content: center
+  align-items: center
+  height: auto
+  padding: 50px 0
+  svg
+    display: block
+    margin: 0 auto
+  p
+    color: rgb(170, 170, 170)
+    text-transform: uppercase
+    padding-top: 20px
+    text-align: center
+    font-weight: 700
+    margin: 0
+
+/** END SECTION  **/
+
+/** START RESPONSIVE BREAKPOINTS **/
+$breakpoint-sm: 600px
+$breakpoint-md: 768px
+$breakpoint-lg: 992px
+$breakpoint-xl: 1200px
+$breakpoint-xll: 2500px
+$breakpoint-xxl: 3840px
+
+@media (min-width: $breakpoint-xxl)
+  .container
+    min-width: 80%
+  app-gallery
+    min-width: 100%
+  .card
+    .card-header
+      height: 400px
+    .card-title
+      height: 120px !important
+    &:hover
+      .card-header
+        height: 360px !important
+      .card-title
+        height: 160px !important
+
+  .new-category
+    padding: 150px 
+    .col-12
+      margin-top: 50px
+    svg
+      transform: scale(3)
+    p
+      font-size: 2.5rem
+
+  section
+    .main-card
+      flex: 0 0 calc(20% - 48px)
+      margin: 30px
+      &:nth-child(5n + 1)
+        margin-left: 0
+      &:nth-child(5n)
+        margin-right: 0
+      .card-title
+        height: 120px
+        font-size: 2rem
+
+@media (min-width: $breakpoint-xll + 1) and (max-width: $breakpoint-xxl)
+  .container
+    min-width: 80%
+  app-gallery
+    min-width: 100%
+
+  .card
+    .card-header
+      height: 330px
+    .card-title
+      height: 80px !important
+    &:hover
+      .card-header
+        height: 290px !important
+      .card-title
+        height: 120px !important
+
+  .new-category
+    padding: 120px 0
+
+    .col-12
+      margin-top: 40px
+    svg
+      transform: scale(2.1)
+    p
+      font-size: 1.8rem
+
+  section
+    .main-card
+      flex: 0 0 calc(20% - 48px)
+      margin: 30px
+      &:nth-child(5n + 1)
+        margin-left: 0
+      &:nth-child(5n)
+        margin-right: 0
+      .card-title
+        height: 120px
+        font-size: 2rem
+
+@media (min-width: $breakpoint-xl + 1) and (max-width: $breakpoint-xll)
+  section
+    .main-card
+      flex: 0 0 calc(25% - 15px)
+      margin: 10px
+      &:nth-child(4n + 1)
+        margin-left: 0
+      &:nth-child(4n)
+        margin-right: 0
+
+@media (min-width: $breakpoint-lg + 1) and (max-width: $breakpoint-xl)
+  section
+    .main-card
+      flex: 0 0 calc(25% - 15px)
+      margin: 10px
+      &:nth-child(4n + 1)
+        margin-left: 0
+      &:nth-child(4n)
+        margin-right: 0
+
+@media (min-width: $breakpoint-md + 1) and (max-width: $breakpoint-lg)
+  section
+    .main-card
+      flex: 0 0 calc(33% - 11px)
+      margin: 10px
+
+      &:nth-child(3n + 1)
+        margin-left: 0
+      &:nth-child(3n)
+        margin-right: 0
+
+@media (min-width: $breakpoint-sm + 1) and (max-width: $breakpoint-md)
+  section
+    .main-card
+      flex: 0 0 calc(50% - 15px)
+      margin: 10px
+      &:nth-child(2n + 1)
+        margin-left: 0
+      &:nth-child(2n)
+        margin-right: 0
+@media (max-width: $breakpoint-sm)
+  .row
+    margin-left: 7px
+
+  .gallery
+    width: 100%
+  section
+    .main-card
+      flex: 0 0 calc(100% - 20px)
+      margin-bottom: 20px
+      margin-left: 0
+  header
+    .bg-image
+      min-height: 45%
+    img
+      height: 100% !important
+      width: auto !important
+      filter: blur(5px) !important
+.gallery
+  width: auto

@@ -1,0 +1,70 @@
+<div (click)="close()" class="blackdrop"></div>
+<div class="alert-box" [ngClass]="{ nopadding: action == 'gallery' }">
+   <div class="alert-box-button-close">
+      <button type="button" (click)="close()" class="close-button">
+         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28px" height="28px">
+            <path fill-rule="evenodd" fill="rgb(255, 255, 255)"
+               d="M28.000,2.820 L25.180,-0.000 L14.000,11.180 L2.820,-0.000 L-0.000,2.820 L11.180,14.000 L-0.000,25.180 L2.820,28.000 L14.000,16.820 L25.180,28.000 L28.000,25.180 L16.820,14.000 L28.000,2.820 Z" />
+         </svg>
+
+         Zavrieť
+      </button>
+   </div>
+   <!-- ADD CATEGORY -->
+   <div class="body" id="body" *ngIf="action == 'addCategory'">
+      <h3>Pridať kategóriu</h3>
+
+      <form #f="ngForm" (ngSubmit)="addNewCategory(f)">
+         <input type="text" ngModel name="category" placeholder="Zadajte názov kategórie" required />
+         <button class="btn" [disabled]="!f.valid">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14px"
+               height="14px">
+               <path fill-rule="evenodd" fill="rgb(255, 255, 255)"
+                  d="M14.000,8.000 L8.000,8.000 L8.000,14.000 L6.000,14.000 L6.000,8.000 L-0.000,8.000 L-0.000,6.000 L6.000,6.000 L6.000,-0.000 L8.000,-0.000 L8.000,6.000 L14.000,6.000 L14.000,8.000 Z" />
+            </svg>
+            Pridať
+         </button>
+      </form>
+
+      <span class="error" *ngIf="error"> {{ error }}</span>
+   </div>
+   <!-- END CATEGORY -->
+   <!-- ADD PHOTOS -->
+   <div class="body" id="body" *ngIf="action == 'addPhotos'">
+      <h3>Pridať fotky</h3>
+      <div class="draganddrop" DropZone (photos)="photosToUpload($event)">
+         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="60px" height="42px">
+            <path fill-rule="evenodd" fill="rgb(170, 170, 170)"
+               d="M6.000,6.000 L6.000,-0.000 L10.000,-0.000 L10.000,6.000 L16.000,6.000 L16.000,10.000 L10.000,10.000 L10.000,16.000 L6.000,16.000 L6.000,10.000 L-0.000,10.000 L-0.000,6.000 L6.000,6.000 ZM12.000,18.000 L12.000,12.000 L18.000,12.000 L18.000,6.000 L32.000,6.000 L35.660,10.000 L42.000,10.000 C44.200,10.000 46.000,11.800 46.000,14.000 L46.000,38.000 C46.000,40.200 44.200,42.000 42.000,42.000 L10.000,42.000 C7.800,42.000 6.000,40.200 6.000,38.000 L6.000,18.000 L12.000,18.000 ZM26.000,36.000 C31.520,36.000 36.000,31.520 36.000,26.000 C36.000,20.480 31.520,16.000 26.000,16.000 C20.480,16.000 16.000,20.480 16.000,26.000 C16.000,31.520 20.480,36.000 26.000,36.000 ZM19.600,26.000 C19.600,29.540 22.460,32.400 26.000,32.400 C29.540,32.400 32.400,29.540 32.400,26.000 C32.400,22.460 29.540,19.600 26.000,19.600 C22.460,19.600 19.600,22.460 19.600,26.000 Z" />
+         </svg>
+         <span class="text"> sem presunte fotky</span>
+         <span class="text-outlined">alebo</span>
+
+         <input type="file" multiple id="file" class="file" (change)="photosToUpload($event.target.files)" />
+         <label class="label-file" for="file">Vyberte súbory</label>
+      </div>
+
+      <form style="border: none !important">
+         <button class="btn">
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14px"
+               height="14px">
+               <path fill-rule="evenodd" fill="rgb(255, 255, 255)"
+                  d="M14.000,8.000 L8.000,8.000 L8.000,14.000 L6.000,14.000 L6.000,8.000 L-0.000,8.000 L-0.000,6.000 L6.000,6.000 L6.000,-0.000 L8.000,-0.000 L8.000,6.000 L14.000,6.000 L14.000,8.000 Z" />
+            </svg>
+            Pridať
+         </button>
+      </form>
+      <span class="error" style="white-space: pre;" *ngIf="error"> {{ error }}</span>
+    
+   </div>
+   <!-- END PHOTOS -->
+   <!-- START GALLERY -->
+   <div class="body" id="body" *ngIf="action == 'gallery'">
+      <carousel style="width: 100%" [showIndicators]="false" [startFromIndex]="index" [itemsPerSlide]="1.000001">
+         <slide *ngFor="let pic of gallery">
+            <img [src]="pic.imgURL" alt="first slide" style="display: block; width: 100%" />
+         </slide>
+      </carousel>
+   </div>
+   <!-- ENDSTART GALLERY -->
+</div>
