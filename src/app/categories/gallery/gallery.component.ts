@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { BgService } from 'src/app/shared/bgchange.service';
+import { BgService } from "../../header/header.component";
 import { GalleryResposnePic } from 'src/app/shared/category.model';
 
 import * as fromApp from '../../store/app.reducer';
@@ -9,6 +9,8 @@ import * as GalleryActions from '../../store/gallery.actions';
 
 import { NgxSpinnerService } from 'ngx-bootstrap-spinner';
 import { Subscription } from 'rxjs';
+import { DatabaseService } from 'src/app/store/database.service';
+import { first, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-gallery',
@@ -17,6 +19,7 @@ import { Subscription } from 'rxjs';
 })
 export class GalleryComponent implements OnInit, OnDestroy {
   images: GalleryResposnePic[] = [];
+  categoryID: number;
   route: string;
   error: string = '';
 
@@ -40,12 +43,12 @@ export class GalleryComponent implements OnInit, OnDestroy {
     });
 
     this.sub = this.store.select('galleryList').subscribe((state) => {
-     
       var images = state.categories.find(
         (gallery) => gallery.name == this.route
       );
 
       if (images) {
+        this.categoryID = images.id;
         this.images = images.gallery;
 
         if (images.empty == true) {
@@ -68,7 +71,6 @@ export class GalleryComponent implements OnInit, OnDestroy {
         }, 1500);
       }
 
-
       if (state.error) {
         this.error = state.error;
         this.openedModal = true;
@@ -76,8 +78,6 @@ export class GalleryComponent implements OnInit, OnDestroy {
         this.error = '';
       }
     });
-
-
   }
 
   openedModal: boolean = false;
@@ -89,8 +89,9 @@ export class GalleryComponent implements OnInit, OnDestroy {
   openedGallery: boolean = false;
   gallery = 'gallery';
   indexInGallery: number = 0;
+
   openGallery(index) {
-    this.indexInGallery = index;
+    this.indexInGallery = ++index;
     this.openedGallery = !this.openedGallery;
   }
 

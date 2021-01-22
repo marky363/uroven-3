@@ -40,6 +40,7 @@ header
       filter: blur(8px)
       width: 100%
       animation-duration: .5s
+      overflow: hidden
    p
       justify-content: center
       align-items: center
@@ -51,11 +52,9 @@ header
 @keyframes oldBG
    from
       opacity: 0.5
-     
 
    to
       opacity: 0.01
-    
 
 @keyframes newBG
    from
@@ -102,8 +101,10 @@ $breakpoint-xxl: 3840px
 
    header
       .bg-image
-         min-height: 45%
+         min-height: 30vh
+
       img
-         height: 100% !important
+         height: auto
          width: auto !important
+         position: absolute
          filter: blur(5px) !important

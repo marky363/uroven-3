@@ -16,6 +16,9 @@ import * as GalleryActions from '../store/gallery.actions';
   providedIn: 'root',
 })
 export class DatabaseService {
+
+  apiUrl = "http://api.programator.sk";
+
   fetchGalleries() {
     return this.http
       .get<Galleries[][]>('http://api.programator.sk/gallery')
@@ -34,7 +37,22 @@ export class DatabaseService {
 
   fetchPictures(path) {
     return this.http
-      .get('http://api.programator.sk/images/500x0/' + path, {
+      .get('http://api.programator.sk/images/300x0/' + path, {
+        responseType: 'blob',
+      })
+      .pipe(
+        map(
+          (res) => this.getPicutre(res),
+          catchError((error) => {
+            console.log(error);
+            return of('');
+          })
+        )
+      );
+  }
+  fetchPicturesCustomWidth(path, width) {
+    return this.http
+      .get('http://api.programator.sk/images/' + width + 'x0/' + path, {
         responseType: 'blob',
       })
       .pipe(
@@ -57,7 +75,7 @@ export class DatabaseService {
   fetchGalleryAndGeneratePictures(path) {
     return this.fetchGallery(path).pipe(
       map((res) => {
-        res.images.map((gallery) => {
+        return res.images.map((gallery) => {
           this.fetchPictures(gallery.fullpath)
             .pipe(catchError((err) => throwError(err)))
             .subscribe(
@@ -74,6 +92,40 @@ export class DatabaseService {
                   new GalleryActions.AddImageToCategory({
                     galleryPath: res.gallery.path,
                     image: image,
+                    fullsize: false,
+                  })
+                );
+              },
+              (error) => {
+                console.warn('API: Image Error: \n' + error.url);
+              }
+            );
+          return { loaded: true };
+        });
+      })
+    );
+  }
+  fetchGalleryAndGeneratePicturesFullSize(path, width) {
+    return this.fetchGallery(path).pipe(
+      map((res) => {
+        res.images.map((gallery) => {
+          this.fetchPicturesCustomWidth(gallery.fullpath, width)
+            .pipe(catchError((err) => throwError(err)))
+            .subscribe(
+              (img) => {
+                let image = new GalleryResposnePic(
+                  gallery.fullpath,
+                  gallery.modifed,
+                  gallery.name,
+                  gallery.path,
+                  img
+                );
+
+                this.store.dispatch(
+                  new GalleryActions.AddImageToCategory({
+                    galleryPath: res.gallery.path,
+                    image: image,
+                    fullsize: true,
                   })
                 );
               },
@@ -82,7 +134,7 @@ export class DatabaseService {
               }
             );
         });
-        return { loaded: true };
+        return { sended: true };
       })
     );
   }
@@ -117,9 +169,6 @@ export const HandleError = (errorRes: any, action?) => {
   let errorMessage = 'An unknow error!';
 
   switch (errorRes.error.code || errorRes.status) {
-    case 409:
-      errorMessage = 'Galéria so zadaným názvom  "' + action + '" už existuje';
-      break;
     case 400:
       errorMessage = 'Chybne zadaný request';
       break;
@@ -130,6 +179,6 @@ export const HandleError = (errorRes: any, action?) => {
     default:
       errorMessage = 'An unknow error!';
   }
-  console.log(errorMessage);
+
   return of(new GalleryActions.Error(errorMessage));
 };

@@ -2,7 +2,8 @@
   <modal [action]="action" (close)="openModalAddPhotos()" [error]="error"></modal>
 </span>
 <span *ngIf="openedGallery">
-  <modal [action]="gallery" [gallery]="images" (close)="openGallery()" [index]="indexInGallery"></modal>
+  <modal [action]="gallery" [galleryID]="categoryID" (close)="openGallery()" [index]="indexInGallery"></modal>
+
 </span>
 <section>
   <div class="container">
@@ -12,7 +13,7 @@
           <a (click)="removePhoto(category.fullpath)">
             <span class="close_cross">&times;</span></a>
           <div class="card-header" (click)="openGallery(i)">
-            <img [src]="category.imgURL" alt="gallery photo" />
+            <img [src]="category.imgURL" [alt]="category.name" />
           </div>
         </div>
       </div>

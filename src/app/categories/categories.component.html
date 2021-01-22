@@ -1,5 +1,5 @@
 <span *ngIf="openedModal">
-  <modal [action]="action" [error]="error" (close)="openModalAddCategory()"></modal>
+  <modal [action]="'addCategory'" [error]="error" (close)="openModalAddCategory()"></modal>
 </span>
 
 <section>
@@ -9,9 +9,9 @@
         <div class="card">
           <a (click)="removeGallery(category.galleryPath)">
             <span class="close_cross">&times;</span></a>
-          <a (click)="openGallery(category)" style="cursor: pointer">
+          <a [routerLink]="['/gallery/' + category.name]" routerLinkActive="router-link-active"  style="text-decoration: none;">
             <div class="card-header">
-              <img [src]="category.img" alt="gallery photo" onerror="this.src='../../assets/noimage.png'" />
+              <img [src]="category.img" [alt]="category.na" onerror="this.src='../../assets/noimage.png'" />
             </div>
             <div class="card-title">
               <span class="title"> {{ category.name }}</span>

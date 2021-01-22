@@ -1,11 +1,18 @@
+@keyframes bg
+   from
+      background-color: rgba(0,0,0, 0.0)
+   to
+      background-color: rgba(0,0,0, 0.75)
+
 .blackdrop
    position: fixed
    top: 0
    left: 0
-   z-index: 50
+   z-index: 1000
    height: 100vh
    width: 100vw
    background-color: rgba(0,0,0, 0.75)
+   animation: bg .4s
 
 @keyframes falldown
    from
@@ -13,24 +20,21 @@
       top: -20%
    to
       top: 50%
-      opacity: 1 
-      
-
+      opacity: 1
 
 
 .nopadding
    padding: 0 !important
 .alert-box
-   // position: absolute
    max-width: 95% !important
    background: white
    width: 50%
-   opacity: 1 
+   opacity: 1
    position: fixed
    top: 50%
    left: 50%
    transform: translate(-50%, -50%)
-   z-index: 100
+   z-index: 1001
    padding: 26px
    animation-name: falldown
    animation-duration: .5s
@@ -57,7 +61,7 @@
          color: #ff7961
          font-size: 80%
          display: block
-         padding: 2% 2% 0 2%
+         padding: 4% 2% 0 2%
          text-align: center
       h3
          font-size: 1.2rem
@@ -110,7 +114,7 @@
          width: 100%
          border: 3px dashed #eeeeee
          text-align: center
-         border-color
+       
          svg
             margin: 40px auto 8px auto
             display: block
@@ -146,7 +150,7 @@
 
    /** END ADD PHOTOS  **/
    /** START GALLERY  **/
-carousel
+ngb-carousel
    &::ng-deep .carousel-control-next
       margin-right: -80px !important
       .carousel-control-next-icon
@@ -159,6 +163,9 @@ carousel
          background-image: url('data:image/svg+xml;utf8, <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15px" height="24px"><path fill-rule="evenodd"  opacity="0.502" fill="rgb(249, 249, 249)" d="M12.157,24.000 L15.013,21.180 L5.736,12.000 L15.013,2.820 L12.157,-0.000 L0.003,12.000 L12.157,24.000 Z"/></svg>')
          width: 16px
          height: 24px
+   
+   &:focus
+      outline: none
    /** END GALLERY GALLERY  **/
 
 $breakpoint-sm: 600px
@@ -336,5 +343,5 @@ $breakpoint-xxl: 3840px
          margin-right: 0 !important
       &::ng-deep .carousel-control-prev
          margin-left: 0 !important
-   .error 
+   .error
       margin-top: 80px

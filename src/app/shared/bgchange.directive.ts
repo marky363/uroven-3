@@ -1,7 +1,8 @@
 import { Directive, HostBinding, OnDestroy } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
-import { BgService } from './bgchange.service';
+import { debounceTime, tap } from 'rxjs/operators';
+import { BgService } from "../header/header.component"
 
 @Directive({
   selector: '[Bgchange]',
@@ -18,14 +19,18 @@ export class BgchangeDirective implements OnDestroy {
   }
 
   constructor(private BG: BgService) {
-    this.sub = this.BG.BgUrl.subscribe((bg) => {
+    this.sub = this.BG.BgUrl.pipe(
+      debounceTime(400),
+      tap((bg) => {
+        if (bg != this.bg_src) {
+          this.bgAnimation = 'oldBG';
+        }
+      }),
+      debounceTime(200)
+    ).subscribe((bg) => {
       if (bg != this.bg_src) {
-        this.bgAnimation = 'oldBG';
-
-        setTimeout(() => {
-          this.bg_src = bg;
-          this.bgAnimation = 'newBG';
-        }, 400);
+        this.bg_src = bg;
+        this.bgAnimation = 'newBG';
       }
     });
   }

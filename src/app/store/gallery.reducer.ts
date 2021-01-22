@@ -27,20 +27,44 @@ export function GalleryReducer(
       };
 
     case GalleryActions.PUSH_CATEGORY:
-      let category = action.payload;
-      let newCategory = new Category(
-        category.name,
-        category.img,
-        category.galleryLenght,
-        category.galleryPath,
-        category.gallery,
-        category.empty,
-        state.categories.length
-      );
+      var copyCat = [...state.categories];
+
+      let category = action.payload.category;
+      let newCategory;
+
+      if (!action.payload.update) {
+        newCategory = new Category(
+          category.name,
+          '',
+          category.galleryLenght,
+          category.galleryPath,
+          category.gallery,
+          category.empty,
+          copyCat.length
+        );
+        copyCat = [...copyCat, newCategory];
+      } else {
+        let id = state.categories.findIndex(
+          (oneCategory) => oneCategory.name === category.name
+        );
+        const selectedCategory = state.categories[id];
+       
+        newCategory = new Category(
+          selectedCategory.name,
+          category.img,
+          selectedCategory.galleryLenght,
+          selectedCategory.galleryPath,
+          selectedCategory.gallery,
+          selectedCategory.empty,
+          selectedCategory.id
+        );
+
+        copyCat[id] = newCategory;
+      }
 
       return {
         ...state,
-        categories: [...state.categories, newCategory],
+        categories: copyCat,
       };
 
     case GalleryActions.POST_GALLERY:
@@ -75,25 +99,54 @@ export function GalleryReducer(
 
     case GalleryActions.ADD_IMAGE_TO_CATEGORY:
       const copyOfCategories = [...state.categories];
-      const findedCategory = copyOfCategories.find(
+      let findedCategory = copyOfCategories.find(
         (category) => category.galleryPath == action.payload.galleryPath
       );
+     
       let updatedGallery;
-      if (findedCategory.galleryLenght == 0) {
+
+      if (action.payload.fullsize) {
+        let id;
+
+        const findedGallery = findedCategory.gallery.find((gallery, index) => {
+          id = index;
+
+          return gallery.name == action.payload.image.name;
+        });
+
+        const updatedPicture = {
+          ...findedGallery,
+          ...action.payload.image,
+        };
+
+        const updatedGalery = {
+          ...findedCategory.gallery[id],
+          ...updatedPicture,
+        }
+        let slice = findedCategory.gallery.slice()
+        slice[id] = updatedGalery
+
+
         updatedGallery = {
           ...findedCategory,
-          img: action.payload.image.imgURL,
-          galleryLenght: 1,
-          gallery: [action.payload.image],
+          gallery: [...slice],
         };
       } else {
-        let length = findedCategory.gallery.length;
-        ++length;
-        updatedGallery = {
-          ...findedCategory,
-          galleryLenght: length,
-          gallery: [...findedCategory.gallery, action.payload.image],
-        };
+        if (findedCategory.galleryLenght == 0) {
+          updatedGallery = {
+            ...findedCategory,
+            galleryLenght: 1,
+            gallery: [action.payload.image],
+          };
+        } else {
+          let length = findedCategory.gallery.length;
+          ++length;
+          updatedGallery = {
+            ...findedCategory,
+            galleryLenght: length,
+            gallery: [...findedCategory.gallery, action.payload.image],
+          };
+        }
       }
 
       copyOfCategories[findedCategory.id] = updatedGallery;

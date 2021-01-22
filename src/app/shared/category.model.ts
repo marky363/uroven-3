@@ -8,13 +8,10 @@ export class Category {
     public galleryPath?: string,
     public gallery?: GalleryResposnePic[],
     public empty?: boolean,
-    public id?: number
-   
+    public id?: number,
   ) {}
 }
-export class Picture {
-  constructor(public picurl: string) {}
-}
+
 export class GalleryResponse {
   constructor(
     public gallery: {
@@ -54,9 +51,5 @@ export class Files {
   constructor(public photos: File, public url: SafeUrl) {}
 }
 export class Error {
-  constructor(
-    public ok: boolean,
-    public status: number,
-    public url: string,
-    ) {}
+  constructor(public ok: boolean, public status: number, public url: string) {}
 }

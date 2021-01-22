@@ -35,6 +35,13 @@ export class GalleryEffects {
 
       res.forEach((data) => {
         if (data.path.length < 15 && data.image != undefined) {
+
+          let category = new Category(data.name,'',length,data.path,[],false);
+          this.store.dispatch(new GalleryActions.PushCategory({category: category,update: false}));
+
+          ++counter;
+          if (counter == res.length - 1) {this.store.dispatch(new GalleryActions.LoadedEnd());}
+
           this.database
             .fetchPictures(data.image.fullpath)
             .pipe(
@@ -48,34 +55,32 @@ export class GalleryEffects {
             )
             .subscribe(
               ([img, gallery]) => {
+             
                 let length = gallery.images.length;
                 let category = new Category(data.name,img,length,data.path,[],false);
-                this.store.dispatch(new GalleryActions.PushCategory(category));
-                ++counter;
-                if (counter == res.length - 1) {
-                  this.store.dispatch(new GalleryActions.LoadedEnd());
-                }
+                this.store.dispatch(new GalleryActions.PushCategory({category: category,update: true, }));
               },
               (error: Error) => {
                 console.warn('API Image Error: \n' + error.url);
                 let category = new Category(data.name,'',0,data.path,[],true);
-                if (category.name.length < 20) {++counter;this.store.dispatch(new GalleryActions.PushCategory(category));
-                if (counter == res.length - 1) {this.store.dispatch(new GalleryActions.LoadedEnd());}
-
-                }}
+                if (category.name.length < 20) {this.store.dispatch(new GalleryActions.PushCategory({category: category,update: true,}));}
+              }
             );
         } else {
-                let category = new Category(data.name, '', 0, data.path, [], true);
-                if (category.name.length < 20) {++counter;this.store.dispatch(new GalleryActions.PushCategory(category));
-                if (counter == res.length - 1) {this.store.dispatch(new GalleryActions.LoadedEnd());
-            }}
+          let category = new Category(data.name, '', 0, data.path, [], true);
+          if (category.name.length < 20) {
+
+            this.store.dispatch(new GalleryActions.PushCategory({category: category,update: false}));
+            ++counter;
+            if (counter == res.length - 1) {this.store.dispatch(new GalleryActions.LoadedEnd());}
+          }
         }
       });
     })
   );
 
   @Effect({ dispatch: false })
-  loadPhotos = this.actions$.pipe(
+  loadThumb = this.actions$.pipe(
     ofType(GalleryActions.LOADING_END),
     switchMap(() => this.store.select('galleryList').pipe(take(1))),
     map((state) => {
@@ -85,12 +90,20 @@ export class GalleryEffects {
           .pipe(catchError((err) => throwError('')))
           .subscribe(
             (data) => {
-              if (data.loaded) {
+              this.database.fetchGalleryAndGeneratePicturesFullSize(state.openedCategory, 1500).subscribe()
+
+              if (data.length > 0 || data[0].loaded) {
+
                 state.categories.forEach((gallery) => {
                   if (state.openedCategory != gallery.name) {
                     this.database
                       .fetchGalleryAndGeneratePictures(gallery.galleryPath)
-                      .subscribe();
+                      .subscribe((res) => {
+                        if (res[0].loaded) {
+                          this.database.fetchGalleryAndGeneratePicturesFullSize(gallery.galleryPath, 1500).subscribe()
+                        }
+                      });
+
                   }
                 });
               }
@@ -99,7 +112,11 @@ export class GalleryEffects {
               state.categories.forEach((gallery) => {
                 this.database
                   .fetchGalleryAndGeneratePictures(gallery.galleryPath)
-                  .subscribe();
+                  .subscribe(res => {
+                    if (res[0].loaded) {
+                      this.database.fetchGalleryAndGeneratePicturesFullSize(gallery.galleryPath, 1500).subscribe()
+                    }
+                  });
               });
             }
           );
@@ -107,27 +124,19 @@ export class GalleryEffects {
         state.categories.forEach((gallery) => {
           this.database
             .fetchGalleryAndGeneratePictures(gallery.galleryPath)
-            .subscribe();
+            .subscribe(res => {
+              if (res.length > 0) {
+                if (res[0].loaded) {
+                  this.database.fetchGalleryAndGeneratePicturesFullSize(gallery.galleryPath, 1500).subscribe()
+                }
+              }
+
+            });
         });
       }
     })
   );
 
-  @Effect()
-  postCategory = this.actions$.pipe(
-    ofType(GalleryActions.POST_GALLERY),
-    map((action: GalleryActions.PostGallery) => action.payload),
-    switchMap((payload) => {
-      return this.database.postCategory(payload).pipe(
-        map(() => {
-          return new GalleryActions.Error('');
-        }),
-        catchError((error) => {
-          return HandleError(error, payload);
-        })
-      );
-    })
-  );
   @Effect({ dispatch: false })
   removefromDB = this.actions$.pipe(
     ofType(GalleryActions.REMOVE),
@@ -156,7 +165,7 @@ export class GalleryEffects {
         this.database
           .uploadPhotos(formData, SelectedGallery.galleryPath)
           .subscribe((res: Uploaded) => {
-            this.database.fetchPictures(res.uploaded[0].fullpath).subscribe(
+            this.database.fetchPicturesCustomWidth(res.uploaded[0].fullpath, 1500).subscribe(
               (img) => {
                 let image = new GalleryResposnePic(
                   res.uploaded[0].fullpath,
@@ -169,18 +178,19 @@ export class GalleryEffects {
                   new GalleryActions.AddImageToCategory({
                     galleryPath: state.openedCategory,
                     image: image,
+                    fullsize: false,
                   })
                 );
               },
               (error) => {
                 this.database
                   .removePath(res.uploaded[0].fullpath)
-                  .subscribe((res) => {});
+                  .subscribe((res) => { });
 
                 this.store.dispatch(
                   new GalleryActions.Error(
                     'Chyba servera nahrajte inú fotku ako: ' +
-                      res.uploaded[0].name
+                    res.uploaded[0].name
                   )
                 );
               }
@@ -194,5 +204,5 @@ export class GalleryEffects {
     private actions$: Actions,
     private database: DatabaseService,
     private store: Store<fromApp.AppState>
-  ) {}
+  ) { }
 }

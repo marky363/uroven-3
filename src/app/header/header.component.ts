@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injectable, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducer';
 import * as GalleryActions from '../store/gallery.actions';
@@ -6,6 +6,18 @@ import * as GalleryActions from '../store/gallery.actions';
 import { Category } from '../shared/category.model';
 import { Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
+import { BehaviorSubject, Subject } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class BgService {
+  constructor() {}
+
+  BgUrl = new BehaviorSubject<SafeUrl>('../assets/pexels-photo-261187.jpeg') ;
+}
+
+
 
 @Component({
   selector: 'app-header',
@@ -16,15 +28,13 @@ export class HeaderComponent implements OnInit {
   selectedCategory: Category;
   categoryName: string;
 
-  bgUrl: SafeUrl = '../assets/pexels-photo-261187.jpeg';
+  
 
   constructor(private store: Store<fromApp.AppState>, private router: Router) {}
 
   ngOnInit(): void {
     this.store.select('galleryList').subscribe((state) => {
       this.categoryName = state.openedCategory;
-     
-      
     });
   }
 

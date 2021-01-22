@@ -13,7 +13,7 @@ export const POST_GALLERY = '[Gallery] Pushing Gallery to db';
 export const POST_PHOTOS = '[Gallery] Pushing Photos to db';
 export const REMOVE = '[Gallery] Remove from db';
 
-export const CREATE_TEMPORARY_IMAGE = '[Gallery] Creating tmp image';
+
 
 export const ADD_IMAGE_TO_CATEGORY = '[Gallery] Adding image to cat';
 
@@ -31,14 +31,14 @@ export class FetchGalleries implements Action {
 export class PushCategory implements Action {
   readonly type = PUSH_CATEGORY;
 
-  constructor(public payload: Category) {}
+  constructor(public payload: {category: Category, update: boolean}) {}
 }
 
 export class AddImageToCategory implements Action {
   readonly type = ADD_IMAGE_TO_CATEGORY;
 
   constructor(
-    public payload: { galleryPath: string; image: GalleryResposnePic }
+    public payload: { galleryPath: string; image: GalleryResposnePic, fullsize: boolean }
   ) {}
 }
 

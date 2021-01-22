@@ -24,6 +24,9 @@ import { DropZoneDirective } from './shared/drop-zone.directive';
 import { BgchangeDirective } from './shared/bgchange.directive';
 import { NgxSpinnerModule } from "ngx-bootstrap-spinner";
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+
 
 
 
@@ -46,7 +49,8 @@ import { NgxSpinnerModule } from "ngx-bootstrap-spinner";
     CarouselModule.forRoot(),
     EffectsModule.forRoot([GalleryEffects]),
     FormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
