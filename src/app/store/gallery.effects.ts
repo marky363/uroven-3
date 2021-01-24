@@ -58,7 +58,7 @@ export class GalleryEffects {
           }
 
           this.database
-            .fetchPicturesCustomWidth(data.image.fullpath, 250)
+            .fetchPicturesCustomWidth(data.image.fullpath, 800)
             .pipe(
               mergeMap((picture) => {
                 return combineLatest([
