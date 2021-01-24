@@ -1,0 +1,65 @@
+
+$breakpoint-sm: 600px
+$breakpoint-md: 768px
+$breakpoint-lg: 992px
+$breakpoint-xl: 1200px
+$breakpoint-xll: 2500px
+$breakpoint-xxl: 3840px
+
+@media (min-width: $breakpoint-xxl)
+
+  .container
+    min-width: 80% !important
+  section
+    .main-card
+      flex: 0 0 calc(20% - 48px)
+      margin: 30px
+      &:nth-child(5n + 1)
+        margin-left: 0
+        &:nth-child(5n)
+          margin-right: 0
+
+@media (min-width: $breakpoint-xll + 1) and (max-width: $breakpoint-xxl)
+  .container
+    min-width: 80% !important
+
+  section
+    .main-card
+      flex: 0 0 calc(20% - 48px)
+      margin: 30px
+      &:nth-child(5n + 1)
+        margin-left: 0
+        &:nth-child(5n)
+          margin-right: 0
+
+@media (min-width: $breakpoint-lg + 1) and (max-width: $breakpoint-xll)
+  section
+    .main-card
+      flex: 0 0 calc(25% - 15px)
+      margin: 10px
+      &:nth-child(4n + 1)
+        margin-left: 0
+      &:nth-child(4n)
+        margin-right: 0
+
+@media (min-width: $breakpoint-md + 1) and (max-width: $breakpoint-lg)
+  section
+    .main-card
+      flex: 0 0 calc(33% - 11px)
+      margin: 10px
+
+      &:nth-child(3n + 1)
+        margin-left: 0
+      &:nth-child(3n)
+        margin-right: 0
+
+@media (min-width: $breakpoint-sm + 1) and (max-width: $breakpoint-md)
+  section
+    .main-card
+      flex: 0 0 calc(50% - 15px)
+      margin: 10px
+      &:nth-child(2n + 1)
+        margin-left: 0
+      &:nth-child(2n)
+        margin-right: 0
+@media (max-width: $breakpoint-sm)

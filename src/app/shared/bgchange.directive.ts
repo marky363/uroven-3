@@ -2,7 +2,7 @@ import { Directive, HostBinding, OnDestroy } from '@angular/core';
 import { SafeUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { debounceTime, tap } from 'rxjs/operators';
-import { BgService } from "../header/header.component"
+import { BgService } from '../header/header.component';
 
 @Directive({
   selector: '[Bgchange]',

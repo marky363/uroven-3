@@ -1,3 +1,5 @@
+@import "../styles/global"
+@import "../styles/responsive"
 
 /** HEADER **/
 header
@@ -10,16 +12,9 @@ header
       font-size: 2.5vh
       text-transform: uppercase
       color: white
-      font-weight: 400
-      color: #ffffffb6
-
-   p
-      padding-top: 20px
-      text-transform: uppercase
-      color: white
       font-weight: 500
       color: #ffffffb6
-      font-size: 1.8vh
+
    .bg-image
       max-height: 35%
       width: 100%
@@ -42,10 +37,22 @@ header
       animation-duration: .5s
       overflow: hidden
    p
+      padding-top: 20px
+      text-transform: uppercase
+      color: white
+      font-weight: 500
+      color: #ffffffb6
+      font-size: 1.8vh
       justify-content: center
       align-items: center
       .backbutton
          margin-right: 10px
+         .back-icon
+            background-image: url("../../assets/icons/back-icon.svg")
+            width: 18px
+            height: 14px
+            display: inline-block
+            vertical-align: middle
       .category
          font-weight: 700
 
@@ -66,17 +73,11 @@ header
 /** END HEADER **/
 
 /** START RESPONSIVE BREAKPOINTS **/
-$breakpoint-sm: 600px
-$breakpoint-md: 768px
-$breakpoint-lg: 992px
-$breakpoint-xl: 1200px
-$breakpoint-xll: 2500px
-$breakpoint-xxl: 3840px
 
 @media (min-width: $breakpoint-xxl)
    .container
       min-width: 80%
-      svg
+      .back-icon
          transform: scale(2.5)
          margin-right: 30px
    h1
@@ -85,7 +86,7 @@ $breakpoint-xxl: 3840px
 @media (min-width: $breakpoint-xll + 1) and (max-width: $breakpoint-xxl)
    .container
       min-width: 80%
-      svg
+      .back-icon
          transform: scale(2)
          margin-right: 30px
    h1

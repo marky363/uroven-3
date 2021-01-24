@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { BgService } from "../../header/header.component";
+import { BgService } from '../../header/header.component';
 import { GalleryResposnePic } from 'src/app/shared/category.model';
 
 import * as fromApp from '../../store/app.reducer';

@@ -5,9 +5,10 @@ import {
   GalleryResponse,
   GalleryResposnePic,
 } from '../shared/category.model';
-import { catchError, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { catchError, map, takeUntil, tap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as fromApp from '../store/app.reducer';
 import * as GalleryActions from '../store/gallery.actions';
@@ -16,43 +17,25 @@ import * as GalleryActions from '../store/gallery.actions';
   providedIn: 'root',
 })
 export class DatabaseService {
-
-  apiUrl = "http://api.programator.sk";
+  private apiUrl = environment.apiUrl;
 
   fetchGalleries() {
-    return this.http
-      .get<Galleries[][]>('http://api.programator.sk/gallery')
-      .pipe(
-        map((data) => {
-          var data = Object.values(data);
-          return data[0];
-        })
-      );
+    return this.http.get<Galleries[][]>(this.apiUrl + '/gallery').pipe(
+      map((data) => {
+        var data = Object.values(data);
+        return data[0];
+      })
+    );
   }
   fetchGallery(path) {
     return this.http
-      .get<GalleryResponse>('http://api.programator.sk/gallery/' + path)
+      .get<GalleryResponse>(this.apiUrl + '/gallery/' + path)
       .pipe();
   }
 
-  fetchPictures(path) {
-    return this.http
-      .get('http://api.programator.sk/images/300x0/' + path, {
-        responseType: 'blob',
-      })
-      .pipe(
-        map(
-          (res) => this.getPicutre(res),
-          catchError((error) => {
-            console.log(error);
-            return of('');
-          })
-        )
-      );
-  }
   fetchPicturesCustomWidth(path, width) {
     return this.http
-      .get('http://api.programator.sk/images/' + width + 'x0/' + path, {
+      .get(this.apiUrl + '/images/' + width + 'x0/' + path, {
         responseType: 'blob',
       })
       .pipe(
@@ -67,43 +50,63 @@ export class DatabaseService {
   }
 
   postCategory(name) {
-    return this.http.post('http://api.programator.sk/gallery', {
+    return this.http.post(this.apiUrl + '/gallery', {
       name: name,
     });
   }
 
   fetchGalleryAndGeneratePictures(path) {
-    return this.fetchGallery(path).pipe(
-      map((res) => {
-        return res.images.map((gallery) => {
-          this.fetchPictures(gallery.fullpath)
-            .pipe(catchError((err) => throwError(err)))
-            .subscribe(
-              (img) => {
-                let image = new GalleryResposnePic(
-                  gallery.fullpath,
-                  gallery.modifed,
-                  gallery.name,
-                  gallery.path,
-                  img
-                );
+    let sub = new Subject<boolean>();
+    this.fetchGallery(path)
+      .pipe(
+        takeUntil(sub),
+        tap((res) => {
+          let counter = 0;
+          if (res.images.length === 0) {
+            sub.next(true);
+          }
+          res.images.map((gallery) => {
+            this.fetchPicturesCustomWidth(gallery.fullpath, 250)
+              .pipe(
+                catchError((err) => {
+                  ++counter;
+                  return throwError(err);
+                })
+              )
+              .subscribe(
+                (img) => {
+                  ++counter;
+                  if (counter == res.images.length) {
+                    sub.next(true);
+                  }
 
-                this.store.dispatch(
-                  new GalleryActions.AddImageToCategory({
-                    galleryPath: res.gallery.path,
-                    image: image,
-                    fullsize: false,
-                  })
-                );
-              },
-              (error) => {
-                console.warn('API: Image Error: \n' + error.url);
-              }
-            );
-          return { loaded: true };
-        });
-      })
-    );
+                  let image = new GalleryResposnePic(
+                    gallery.fullpath,
+                    gallery.modifed,
+                    gallery.name,
+                    gallery.path,
+                    img
+                  );
+
+                  this.store.dispatch(
+                    new GalleryActions.AddImageToCategory({
+                      galleryPath: res.gallery.path,
+                      image: image,
+                      fullsize: false,
+                    })
+                  );
+                },
+                (error) => {
+                  console.warn('API: Image Error: \n' + error.url);
+                }
+              );
+          });
+        }),
+        catchError((err) => throwError(''))
+      )
+      .subscribe();
+
+    return sub;
   }
   fetchGalleryAndGeneratePicturesFullSize(path, width) {
     return this.fetchGallery(path).pipe(
@@ -141,18 +144,15 @@ export class DatabaseService {
 
   uploadPhotos(image: FormData, path: string) {
     return this.http
-      .post('http://api.programator.sk/gallery/' + path, image)
+      .post(this.apiUrl + '/gallery/' + path, image)
       .pipe(catchError((error) => throwError(error)));
   }
 
   removePath(path) {
-    return this.http.delete('http://api.programator.sk/gallery/' + path);
-  }
-  removeErrorImage(path) {
-    return this.http.delete(path);
+    return this.http.delete(this.apiUrl + '/gallery/' + path);
   }
 
-  getPicutre(img) {
+  private getPicutre(img) {
     const unsafeImg = URL.createObjectURL(img);
     const picture = this.sanitizer.bypassSecurityTrustUrl(unsafeImg);
     return picture;
@@ -164,21 +164,3 @@ export class DatabaseService {
     private store: Store<fromApp.AppState>
   ) {}
 }
-
-export const HandleError = (errorRes: any, action?) => {
-  let errorMessage = 'An unknow error!';
-
-  switch (errorRes.error.code || errorRes.status) {
-    case 400:
-      errorMessage = 'Chybne zadaný request';
-      break;
-    case 404:
-      errorMessage = 'Galéria pre upload sa nenašla';
-      break;
-
-    default:
-      errorMessage = 'An unknow error!';
-  }
-
-  return of(new GalleryActions.Error(errorMessage));
-};

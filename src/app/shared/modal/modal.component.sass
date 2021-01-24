@@ -1,3 +1,6 @@
+@import "../../styles/global"
+@import "../../styles/responsive"
+
 @keyframes bg
    from
       background-color: rgba(0,0,0, 0.0)
@@ -44,10 +47,15 @@
       position: absolute
       top: -40px
       right: 0
-      svg
+      .close-icon
          margin-right: 5px
          margin-bottom: 4px
          transform: scale(.8)
+         background-image: url("../../../assets/icons/close-icon.svg")
+         height: 28px
+         width: 28px
+         display: inline-block
+         vertical-align: middle
       .close-button
          border: none
          background-color: #0b000100
@@ -63,6 +71,7 @@
          display: block
          padding: 4% 2% 0 2%
          text-align: center
+        
       h3
          font-size: 1.2rem
          text-transform: uppercase
@@ -98,9 +107,12 @@
             background-color: #42c78d
             border-color: #42c78d
             font-size: .8rem
-            svg
-               margin-bottom: 3px
-               margin-right: 3px
+            .plus-icon
+               background-image: url("../../../assets/icons/plus-icon.svg")
+               height: 14px
+               width: 14px
+               display: inline-block
+               vertical-align: text-top
                transform: scale(0.8)
             &:focus
                outline: none
@@ -114,8 +126,11 @@
          width: 100%
          border: 3px dashed #eeeeee
          text-align: center
-       
-         svg
+
+         .photo-icon
+            background-image: url("../../../assets/icons/photo-icon.svg")
+            width: 60px
+            height: 42px
             margin: 40px auto 8px auto
             display: block
          .text
@@ -163,17 +178,10 @@ ngb-carousel
          background-image: url('data:image/svg+xml;utf8, <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="15px" height="24px"><path fill-rule="evenodd"  opacity="0.502" fill="rgb(249, 249, 249)" d="M12.157,24.000 L15.013,21.180 L5.736,12.000 L15.013,2.820 L12.157,-0.000 L0.003,12.000 L12.157,24.000 Z"/></svg>')
          width: 16px
          height: 24px
-   
+
    &:focus
       outline: none
    /** END GALLERY GALLERY  **/
-
-$breakpoint-sm: 600px
-$breakpoint-md: 768px
-$breakpoint-lg: 992px
-$breakpoint-xl: 1200px
-$breakpoint-xll: 2500px
-$breakpoint-xxl: 3840px
 
 @media (min-width: $breakpoint-xxl)
    .alert-box
@@ -183,7 +191,7 @@ $breakpoint-xxl: 3840px
       border-radius: 10px !important
       .alert-box-button-close
          top: -130px !important
-         svg
+         .close-icon
             transform: scale(3) !important
             margin-right: 50px !important
          .close-button
@@ -204,15 +212,17 @@ $breakpoint-xxl: 3840px
          font-size: 2.9rem !important
          border-radius: 10px !important
          width: 15% !important
-         svg
+         .plus-icon
             transform: scale(2.8) !important
             margin-right: 30px !important
+            vertical-align: middle !important
+            margin-bottom: 10px !important
       .draganddrop
          margin-top: 70px !important
          height: auto
          padding: 100px
          border: 10px dashed #eeeeee !important
-         svg
+         .photo-icon
             transform: scale(3)
          .text
             margin-top: 50px
@@ -237,7 +247,7 @@ $breakpoint-xxl: 3840px
       padding: 50px
       .alert-box-button-close
          top: -100px !important
-         svg
+         .close-icon
             transform: scale(1.6)!important
             margin-right: 30px !important
             margin-bottom: 10px !important
@@ -258,15 +268,17 @@ $breakpoint-xxl: 3840px
       button
          padding: 20px !important
          font-size: 2rem !important
-         svg
+         .plus-icon
             transform: scale(2.2) !important
             margin-right: 20px !important
+            vertical-align: middle !important
+            margin-bottom: 6px !important
    .draganddrop
       margin-top: 70px !important
       height: auto
       padding: 100px
       border: 7px dashed #eeeeee !important
-      svg
+      .photo-icon
          transform: scale(2)
       .text
          margin-top: 50px
@@ -292,7 +304,7 @@ $breakpoint-xxl: 3840px
 
       .alert-box-button-close
          top: -40px !important
-         svg
+         .close-icon
             transform: scale(.8) !important
             margin-right: 4px !important
          .close-button

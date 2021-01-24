@@ -8,7 +8,7 @@ import {
   take,
   withLatestFrom,
 } from 'rxjs/operators';
-import { DatabaseService, HandleError } from './database.service';
+import { DatabaseService } from './database.service';
 import * as GalleryActions from './gallery.actions';
 import * as fromApp from '../store/app.reducer';
 
@@ -20,10 +20,12 @@ import {
   Uploaded,
 } from '../shared/category.model';
 import { Store } from '@ngrx/store';
-import { combineLatest, of, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, of, throwError } from 'rxjs';
 
 @Injectable()
 export class GalleryEffects {
+  loadedMainTHumbs = new BehaviorSubject<boolean>(false);
+
   @Effect({ dispatch: false })
   fetchGalleries = this.actions$.pipe(
     ofType(GalleryActions.FETCH_GALLERIES),
@@ -32,18 +34,31 @@ export class GalleryEffects {
     }),
     map((res: Galleries[]) => {
       let counter: number = 0;
+      let thumbCounter: number = 0;
 
       res.forEach((data) => {
         if (data.path.length < 15 && data.image != undefined) {
-
-          let category = new Category(data.name,'',length,data.path,[],false);
-          this.store.dispatch(new GalleryActions.PushCategory({category: category,update: false}));
-
+          let category = new Category(
+            data.name,
+            '',
+            length,
+            data.path,
+            [],
+            false
+          );
+          this.store.dispatch(
+            new GalleryActions.PushCategory({
+              category: category,
+              update: false,
+            })
+          );
           ++counter;
-          if (counter == res.length - 1) {this.store.dispatch(new GalleryActions.LoadedEnd());}
+          if (counter == res.length - 1) {
+            this.store.dispatch(new GalleryActions.LoadedEnd());
+          }
 
           this.database
-            .fetchPictures(data.image.fullpath)
+            .fetchPicturesCustomWidth(data.image.fullpath, 250)
             .pipe(
               mergeMap((picture) => {
                 return combineLatest([
@@ -55,24 +70,60 @@ export class GalleryEffects {
             )
             .subscribe(
               ([img, gallery]) => {
-             
+                ++thumbCounter;
+                if (thumbCounter == res.length - 1) {
+                  this.loadedMainTHumbs.next(true);
+                }
                 let length = gallery.images.length;
-                let category = new Category(data.name,img,length,data.path,[],false);
-                this.store.dispatch(new GalleryActions.PushCategory({category: category,update: true, }));
+                let category = new Category(
+                  data.name,
+                  img,
+                  length,
+                  data.path,
+                  [],
+                  false
+                );
+                this.store.dispatch(
+                  new GalleryActions.PushCategory({
+                    category: category,
+                    update: true,
+                  })
+                );
               },
               (error: Error) => {
                 console.warn('API Image Error: \n' + error.url);
-                let category = new Category(data.name,'',0,data.path,[],true);
-                if (category.name.length < 20) {this.store.dispatch(new GalleryActions.PushCategory({category: category,update: true,}));}
+                let category = new Category(
+                  data.name,
+                  '',
+                  0,
+                  data.path,
+                  [],
+                  true
+                );
+                if (category.name.length < 20) {
+                  this.store.dispatch(
+                    new GalleryActions.PushCategory({
+                      category: category,
+                      update: true,
+                    })
+                  );
+                }
               }
             );
         } else {
           let category = new Category(data.name, '', 0, data.path, [], true);
           if (category.name.length < 20) {
-
-            this.store.dispatch(new GalleryActions.PushCategory({category: category,update: false}));
+            this.store.dispatch(
+              new GalleryActions.PushCategory({
+                category: category,
+                update: false,
+              })
+            );
             ++counter;
-            if (counter == res.length - 1) {this.store.dispatch(new GalleryActions.LoadedEnd());}
+            ++thumbCounter;
+            if (counter == res.length - 1) {
+              this.store.dispatch(new GalleryActions.LoadedEnd());
+            }
           }
         }
       });
@@ -84,54 +135,84 @@ export class GalleryEffects {
     ofType(GalleryActions.LOADING_END),
     switchMap(() => this.store.select('galleryList').pipe(take(1))),
     map((state) => {
-      if (state.openedCategory) {
+      if (
+        state.openedCategory &&
+        state.categories.find((cat) => cat.name == state.openedCategory)
+      ) {
         this.database
           .fetchGalleryAndGeneratePictures(state.openedCategory)
-          .pipe(catchError((err) => throwError('')))
+          .pipe(
+            mergeMap((res) => combineLatest([of(res), this.loadedMainTHumbs])),
+            catchError((err) => throwError(err))
+          )
           .subscribe(
-            (data) => {
-              this.database.fetchGalleryAndGeneratePicturesFullSize(state.openedCategory, 1500).subscribe()
-
-              if (data.length > 0 || data[0].loaded) {
-
-                state.categories.forEach((gallery) => {
-                  if (state.openedCategory != gallery.name) {
-                    this.database
-                      .fetchGalleryAndGeneratePictures(gallery.galleryPath)
-                      .subscribe((res) => {
-                        if (res[0].loaded) {
-                          this.database.fetchGalleryAndGeneratePicturesFullSize(gallery.galleryPath, 1500).subscribe()
-                        }
-                      });
-
-                  }
-                });
+            ([data, loaded]) => {
+              if (data) {
+                this.database
+                  .fetchGalleryAndGeneratePicturesFullSize(
+                    state.openedCategory,
+                    1500
+                  )
+                  .subscribe();
+                if (loaded) {
+                  state.categories.forEach((gallery) => {
+                    if (state.openedCategory != gallery.name) {
+                      this.database
+                        .fetchGalleryAndGeneratePictures(gallery.galleryPath)
+                        .subscribe((res) => {
+                          this.database
+                            .fetchGalleryAndGeneratePicturesFullSize(
+                              gallery.galleryPath,
+                              1500
+                            )
+                            .subscribe();
+                        });
+                    }
+                  });
+                }
               }
             },
             (error) => {
-              state.categories.forEach((gallery) => {
-                this.database
-                  .fetchGalleryAndGeneratePictures(gallery.galleryPath)
-                  .subscribe(res => {
-                    if (res[0].loaded) {
-                      this.database.fetchGalleryAndGeneratePicturesFullSize(gallery.galleryPath, 1500).subscribe()
-                    }
-                  });
-              });
+              this.loadedMainTHumbs
+                .pipe(map((loaded) => loaded == true))
+                .subscribe((loaded) => {
+                  if (loaded) {
+                    state.categories.forEach((gallery) => {
+                      this.database
+                        .fetchGalleryAndGeneratePictures(gallery.galleryPath)
+                        .subscribe((res) => {
+                          if (res) {
+                            this.database
+                              .fetchGalleryAndGeneratePicturesFullSize(
+                                gallery.galleryPath,
+                                1500
+                              )
+                              .subscribe();
+                          }
+                        });
+                    });
+                  }
+                });
             }
           );
       } else {
-        state.categories.forEach((gallery) => {
-          this.database
-            .fetchGalleryAndGeneratePictures(gallery.galleryPath)
-            .subscribe(res => {
-              if (res.length > 0) {
-                if (res[0].loaded) {
-                  this.database.fetchGalleryAndGeneratePicturesFullSize(gallery.galleryPath, 1500).subscribe()
-                }
-              }
-
+        this.loadedMainTHumbs.subscribe((loaded) => {
+          if (loaded) {
+            state.categories.forEach((gallery) => {
+              this.database
+                .fetchGalleryAndGeneratePictures(gallery.galleryPath)
+                .subscribe((res) => {
+                  if (res) {
+                    this.database
+                      .fetchGalleryAndGeneratePicturesFullSize(
+                        gallery.galleryPath,
+                        1500
+                      )
+                      .subscribe();
+                  }
+                });
             });
+          }
         });
       }
     })
@@ -143,9 +224,6 @@ export class GalleryEffects {
     map((action: GalleryActions.RemoveFromDb) => action.payload),
     switchMap((payload) => {
       return this.database.removePath(payload);
-    }),
-    map((res) => {
-      console.log(res);
     })
   );
   @Effect({ dispatch: false })
@@ -165,36 +243,38 @@ export class GalleryEffects {
         this.database
           .uploadPhotos(formData, SelectedGallery.galleryPath)
           .subscribe((res: Uploaded) => {
-            this.database.fetchPicturesCustomWidth(res.uploaded[0].fullpath, 1500).subscribe(
-              (img) => {
-                let image = new GalleryResposnePic(
-                  res.uploaded[0].fullpath,
-                  res.uploaded[0].modifed,
-                  res.uploaded[0].name,
-                  res.uploaded[0].path,
-                  img
-                );
-                this.store.dispatch(
-                  new GalleryActions.AddImageToCategory({
-                    galleryPath: state.openedCategory,
-                    image: image,
-                    fullsize: false,
-                  })
-                );
-              },
-              (error) => {
-                this.database
-                  .removePath(res.uploaded[0].fullpath)
-                  .subscribe((res) => { });
+            this.database
+              .fetchPicturesCustomWidth(res.uploaded[0].fullpath, 1500)
+              .subscribe(
+                (img) => {
+                  let image = new GalleryResposnePic(
+                    res.uploaded[0].fullpath,
+                    res.uploaded[0].modifed,
+                    res.uploaded[0].name,
+                    res.uploaded[0].path,
+                    img
+                  );
+                  this.store.dispatch(
+                    new GalleryActions.AddImageToCategory({
+                      galleryPath: state.openedCategory,
+                      image: image,
+                      fullsize: false,
+                    })
+                  );
+                },
+                (error) => {
+                  this.database
+                    .removePath(res.uploaded[0].fullpath)
+                    .subscribe((res) => {});
 
-                this.store.dispatch(
-                  new GalleryActions.Error(
-                    'Chyba servera nahrajte inú fotku ako: ' +
-                    res.uploaded[0].name
-                  )
-                );
-              }
-            );
+                  this.store.dispatch(
+                    new GalleryActions.Error(
+                      'Chyba servera nahrajte inú fotku ako: ' +
+                        res.uploaded[0].name
+                    )
+                  );
+                }
+              );
           });
       });
     })
@@ -204,5 +284,5 @@ export class GalleryEffects {
     private actions$: Actions,
     private database: DatabaseService,
     private store: Store<fromApp.AppState>
-  ) { }
+  ) {}
 }

@@ -7,6 +7,7 @@ import { Category } from '../shared/category.model';
 import { Router } from '@angular/router';
 import { SafeUrl } from '@angular/platform-browser';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +15,8 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class BgService {
   constructor() {}
 
-  BgUrl = new BehaviorSubject<SafeUrl>('../assets/pexels-photo-261187.jpeg') ;
+  BgUrl = new BehaviorSubject<SafeUrl>('../assets/pexels-photo-261187.jpeg');
 }
-
-
 
 @Component({
   selector: 'app-header',
@@ -28,13 +27,11 @@ export class HeaderComponent implements OnInit {
   selectedCategory: Category;
   categoryName: string;
 
-  
-
   constructor(private store: Store<fromApp.AppState>, private router: Router) {}
 
   ngOnInit(): void {
-    this.store.select('galleryList').subscribe((state) => {
-      this.categoryName = state.openedCategory;
+    this.store.select('galleryList').pipe(map(state => state.openedCategory)).subscribe((state) => {
+      this.categoryName = state;
     });
   }
 

@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 
 import { Subscription } from 'rxjs';
 
-import { BgService } from "../header/header.component"
+import { BgService } from '../header/header.component';
 
 import { Category } from '../shared/category.model';
 import * as fromApp from '../store/app.reducer';
@@ -18,14 +18,10 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   categories: Category[] = [];
   openedGallery: number;
   loading: boolean = true;
-  error: string = '';
 
   sub: Subscription;
 
-  constructor(
-    private store: Store<fromApp.AppState>,
-    private BG: BgService
-  ) {}
+  constructor(private store: Store<fromApp.AppState>, private BG: BgService) {}
 
   ngOnInit(): void {
     this.sub = this.store.select('galleryList').subscribe((state) => {
@@ -35,7 +31,6 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     });
   }
 
- 
   changeBg(imgUrl) {
     if (imgUrl != '') {
       this.BG.BgUrl.next(imgUrl);
@@ -54,5 +49,4 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
-
 }

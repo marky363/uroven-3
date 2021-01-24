@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   HostListener,
@@ -18,30 +17,29 @@ import { NgForm } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { catchError } from 'rxjs/operators';
 import { DatabaseService } from 'src/app/store/database.service';
-import { config, Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { SubSink } from 'subsink';
 
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.sass'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input('action') action: string;
-  
 
   galery$: Observable<GalleryResposnePic[]>;
   @Input('galleryID') idCategory: number = 0;
   @Input('index') index: any = 0;
 
-
   @Input('error') error: string = '';
 
+  loading: boolean = false;
+
   @Output('close') onClose = new EventEmitter<void>();
+  subs = new SubSink();
 
   @HostListener('document:keydown.escape', ['$event']) public onESC(
     evt: KeyboardEvent
@@ -54,16 +52,11 @@ export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('carousel') carousel: NgbCarousel;
 
   ngAfterViewInit() {
-    if(this.action == "gallery"){
+    if (this.action == 'gallery') {
       this.carousel.pause();
       this.carousel.focus();
-   
     }
-   
   }
-
-
-  subs = new SubSink();
 
   constructor(
     private store: Store<fromApp.AppState>,
@@ -75,7 +68,6 @@ export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.error) {
       this.store.dispatch(new GalleryActions.Error(''));
     }
-
     this.subs.unsubscribe();
   }
   ngOnInit(): void {
@@ -84,32 +76,45 @@ export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.subs.sink = this.store.select('galleryList').subscribe((state) => {
-      this.error = state.error;
+      if (this.action === 'addPhotos') {
+        this.error = state.error;
+      }
     });
   }
+
 
   close() {
     this.onClose.emit();
     this.error = '';
   }
-  addNewCategory(string: NgForm) {
+
+  @ViewChild('f') form: NgForm;
+
+  addNewCategory() {
     this.error = '';
+    let name = this.form.value.category;
+    this.form.reset();
+    this.loading = true;
+
+    setTimeout(() => {
+      if (this.loading) {
+        this.error =
+          'Nahravanie kategórie trva dlhšie ako normálne, prosim počkajte pokial sa nahrajú obrázky do galérie.. ';
+      }
+    }, 2500);
 
     this.subs.sink = this.db
-      .postCategory(string.value.category)
+      .postCategory(name)
       .pipe(catchError((err) => throwError(err)))
       .subscribe(
         (res) => {
-          this.store.dispatch(
-            new GalleryActions.PostGallery(string.value.category)
-          );
+          this.loading = false;
+          this.store.dispatch(new GalleryActions.PostGallery(name));
           this.onClose.emit();
         },
         () => {
-          this.error =
-            'Galéria so zadaným názvom  "' +
-            string.value.category +
-            '" už existuje';
+          this.loading = false;
+          this.error = 'Galéria so zadaným názvom  "' + name + '" už existuje';
         }
       );
   }
@@ -124,6 +129,7 @@ export class ModalComponent implements OnInit, OnDestroy, AfterViewInit {
       let file = new Files(photo, url);
       files.push(file);
     }
+
     this.store.dispatch(new GalleryActions.PostPhotos(files));
   }
 }

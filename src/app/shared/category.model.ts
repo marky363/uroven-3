@@ -8,7 +8,7 @@ export class Category {
     public galleryPath?: string,
     public gallery?: GalleryResposnePic[],
     public empty?: boolean,
-    public id?: number,
+    public id?: number
   ) {}
 }
 

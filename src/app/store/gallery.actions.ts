@@ -49,6 +49,8 @@ export class Error implements Action {
 }
 export class LoadedEnd implements Action {
   readonly type = LOADING_END;
+
+ 
 }
 export class RemoveFromDb implements Action {
   readonly type = REMOVE;

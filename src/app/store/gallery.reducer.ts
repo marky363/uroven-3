@@ -4,7 +4,6 @@ import { Category } from '../shared/category.model';
 export interface State {
   categories: Category[];
   openedCategory: string;
-
   loading: boolean;
   error: string;
 }
@@ -48,7 +47,7 @@ export function GalleryReducer(
           (oneCategory) => oneCategory.name === category.name
         );
         const selectedCategory = state.categories[id];
-       
+
         newCategory = new Category(
           selectedCategory.name,
           category.img,
@@ -102,7 +101,7 @@ export function GalleryReducer(
       let findedCategory = copyOfCategories.find(
         (category) => category.galleryPath == action.payload.galleryPath
       );
-     
+
       let updatedGallery;
 
       if (action.payload.fullsize) {
@@ -122,10 +121,9 @@ export function GalleryReducer(
         const updatedGalery = {
           ...findedCategory.gallery[id],
           ...updatedPicture,
-        }
-        let slice = findedCategory.gallery.slice()
-        slice[id] = updatedGalery
-
+        };
+        let slice = findedCategory.gallery.slice();
+        slice[id] = updatedGalery;
 
         updatedGallery = {
           ...findedCategory,
