@@ -16,8 +16,13 @@ $breakpoint-xxl: 3840px
       margin: 30px
       &:nth-child(5n + 1)
         margin-left: 0
-        &:nth-child(5n)
-          margin-right: 0
+      &:nth-child(5n)
+        margin-right: 0
+      .card
+        border-radius: 15px !important
+        .card-header
+          border-top-left-radius: 15px
+          border-top-right-radius: 15px
 
 @media (min-width: $breakpoint-xll + 1) and (max-width: $breakpoint-xxl)
   .container
@@ -25,12 +30,13 @@ $breakpoint-xxl: 3840px
 
   section
     .main-card
-      flex: 0 0 calc(20% - 48px)
+      flex-basis: calc(20% - 48px)
       margin: 30px
       &:nth-child(5n + 1)
         margin-left: 0
-        &:nth-child(5n)
-          margin-right: 0
+      &:nth-child(5n)
+        margin-right: 0
+      
 
 @media (min-width: $breakpoint-lg + 1) and (max-width: $breakpoint-xll)
   section

@@ -3,14 +3,11 @@
 
 section
   padding-top: 4vh
-
 .card
   .card-header-picture
     cursor: pointer
     padding: 0
-    height: 200px
-    overflow: hidden
-    width: 100%
+    height: 100%
     overflow: hidden
     border-radius: 5px
     border-bottom: none
@@ -18,15 +15,11 @@ section
       width: 100%
       height: 100%
       object-fit: cover
-
   &:hover
     box-shadow: 0px 2px 7px 0px rgba(156,156,156,1)
     transform: translateY(-10px)
     .close_cross
       opacity: .9
-
-.new-category
-  padding: 45px 50px
   .add-icon
     background-image: url("../../../assets/icons/add-icon.svg")
 
@@ -34,86 +27,37 @@ section
   .close_cross
     transform: scale(3)
   section
-    .card
-      .card-header-picture
-        height: 500px
-  .new-category
-    padding: 120px
-    div
-      margin-top: 50px
     .add-icon
       transform: scale(3)
     p
       font-size: 2.5rem
 
 @media (min-width: $breakpoint-xll + 1) and (max-width: $breakpoint-xxl)
-
   .close_cross
     transform: scale(2)
   section
-    .card
-      .card-header-picture
-        height: 400px
-  .new-category
-    padding: 100px
-    div
-      margin-top: 30px
     .add-icon
       transform: scale(2)
     p
-
       font-size: 2rem
 
 @media (min-width: $breakpoint-xl + 1) and (max-width: $breakpoint-xll)
   .close_cross
     transform: scale(1)
-  section
-    .main-card
-      min-width: 220px
-
-@media (min-width: $breakpoint-lg + 1) and (max-width: $breakpoint-xl)
-
-  section
-    .main-card
-      min-width: 220px
 
 @media (max-width: $breakpoint-sm)
 
   section
     width: 100%
     .main-card
-
       flex: 0 0 calc(90%)
       margin-bottom: 20px
       margin-left: auto
       margin-right: auto
       .card-header-picture
-        padding-top: 75%
-        position: relative
         img
           height: 100%
           position: absolute
           top: 0
           left: 0
           display: block
-  header
-    .bg-image
-      min-height: 45%
-    img
-      height: 100% !important
-      width: auto !important
-      filter: blur(5px) !important
-  .new-category
-    padding: 70% 0 0 0
-    .row
-      margin-left: 0
-      position: absolute
-      top: 0
-      left: 0
-      width: 100%
-      height: 100%
-      div
-        &:first-child
-          align-self: flex-end
-    .add-icon
-      margin: auto!important

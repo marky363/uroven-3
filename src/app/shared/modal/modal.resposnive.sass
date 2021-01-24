@@ -1,0 +1,176 @@
+
+@media (min-width: $breakpoint-xxl)
+   .alert-box
+      font-size: 4rem !important
+      padding: 70px !important
+      border-radius: 10px !important
+      .alert-box-button-close
+         top: -130px !important
+         .close-icon
+            transform: scale(3) !important
+            margin-right: 50px !important
+         .close-button
+            font-size: 3rem!important
+   #body
+
+      h3
+         font-size: 4rem !important
+      form
+         height: 210px !important
+         padding-top: 70px !important
+         border-bottom: 3px solid #eeeeee !important
+         input[type=text]
+            font-size: 2.5rem !important
+            padding: 40px 40px 30px 20px !important
+      button
+         padding: 25px !important
+         font-size: 2.9rem !important
+         border-radius: 10px !important
+         width: 15% !important
+         .plus-icon
+            transform: scale(2.8) !important
+            margin-right: 30px !important
+            vertical-align: middle !important
+            margin-bottom: 10px !important
+         .spinner-border
+            width: 3rem
+            height: 3rem
+            margin-right: 20px
+      .draganddrop
+         margin-top: 70px !important
+         height: auto
+         padding: 100px
+         border: 10px dashed #eeeeee !important
+         .photo-icon
+            transform: scale(3)
+         .text
+            margin-top: 50px
+         .label-file
+            width: 35% !important
+            height: 160px !important
+            border-radius: 15px !important
+            border: 10px solid #aaaaaa !important
+   carousel
+      &::ng-deep .carousel-control-next
+         margin-right: -12% !important
+         .carousel-control-next-icon
+            transform: scale(3.1) !important
+      &::ng-deep .carousel-control-prev
+         margin-left: -12% !important
+         .carousel-control-prev-icon
+            transform: scale(3.1) !important
+
+@media (min-width: $breakpoint-xll ) and (max-width: $breakpoint-xxl)
+   .alert-box
+      font-size: 3rem !important
+      padding: 50px !important
+      .alert-box-button-close
+         top: -100px !important
+         .close-icon
+            transform: scale(1.6)!important
+            margin-right: 30px !important
+            margin-bottom: 10px !important
+         .close-button
+            font-size: 2rem!important
+   #body
+      h3
+         font-size: 3rem !important
+      form
+         height: 160px !important
+         padding-top: 40px !important
+         border-bottom: 2px solid #eeeeee !important
+         input[type=text]
+            font-size: 2rem !important
+            padding: 30px 30px 30px 20px !important
+      button
+         padding: 20px !important
+         font-size: 2rem !important
+         .plus-icon
+            transform: scale(2.2) !important
+            margin-right: 20px !important
+            vertical-align: middle !important
+            margin-bottom: 6px !important
+         .spinner-border
+            width: 2rem
+            height: 2rem
+            margin-right: 20px
+            margin-bottom: 5px
+   .draganddrop
+      margin-top: 70px !important
+      height: auto
+      padding: 100px
+      border: 7px dashed #eeeeee !important
+      .photo-icon
+         transform: scale(2)
+      .text
+         margin-top: 50px
+      .label-file
+         width: 50% !important
+         height: 160px !important
+         border-radius: 15px !important
+         border: 10px solid #aaaaaa !important
+   carousel
+      &::ng-deep .carousel-control-next
+         margin-right: -12% !important
+         .carousel-control-next-icon
+            transform: scale(2.6) !important
+      &::ng-deep .carousel-control-prev
+         margin-left: -12% !important
+         .carousel-control-prev-icon
+            transform: scale(2.6) !important
+
+@media (min-width: $breakpoint-xl + 1) and (max-width: $breakpoint-xll - 1)
+   .alert-box
+      font-size: 1rem !important
+      width: 40% !important
+   .alert-box-button-close
+      top: -40px !important
+      .close-icon
+         transform: scale(.8) !important
+         margin-right: 4px !important
+         .close-button
+            font-size: 1rem!important
+   carousel
+      &::ng-deep .carousel-control-next
+         margin-right: -12% !important
+         .carousel-control-next-icon
+            transform: scale(1) !important
+      &::ng-deep .carousel-control-prev
+         margin-left: -12% !important
+         .carousel-control-prev-icon
+            transform: scale(1) !important
+
+@media (min-width: $breakpoint-lg + 1) and (max-width: $breakpoint-xl)
+   .alert-box
+      width: 70%
+
+@media (min-width: $breakpoint-md + 1) and (max-width: $breakpoint-lg)
+   .alert-box
+      width: 70%
+
+@media (min-width: $breakpoint-sm + 1) and (max-width: $breakpoint-md)
+   .alert-box
+      width: 90%
+   carousel
+      &::ng-deep .carousel-control-next
+         margin-right: 0 !important
+      &::ng-deep .carousel-control-prev
+         margin-left: 0 !important
+
+@media (max-width: $breakpoint-sm)
+   .alert-box
+      width: 90% !important
+   #body
+      form
+         input[type=text]
+            width: 100% !important
+         button
+            margin-top: 30px
+            min-width: 30vw !important
+   carousel
+      &::ng-deep .carousel-control-next
+         margin-right: 0 !important
+      &::ng-deep .carousel-control-prev
+         margin-left: 0 !important
+   .error
+      margin-top: 80px
